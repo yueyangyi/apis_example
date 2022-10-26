@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 600,
+  "height": 400,
+  "data": [
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vega/vega-datasets/next/data/world-110m.json",
+      "format": {"type": "topojson", "feature": "countries"}
+    },
+    {
+      "name": "source_1",
+      "url": "https://gist.githubusercontent.com/yueyangyi/c506800c73189faf5c22d81d86d0c4e9/raw/6ff3cbf40bb0a2a218f34ded87bae7ae924d1013/entities.csv",
+      "format": {"type": "csv", "delimiter": ","},
+      "transform": [
+        {
+          "type": "geopoint",
+          "projection": "projection",
+          "fields": ["longitude", "latitude"],
+          "as": ["layer_1_x", "layer_1_y"]
+        }
+      ]
+    },
+    {
+      "name": "source_2",
+      "url": "https://gist.githubusercontent.com/yueyangyi/935bdef1a02b5803ab31596223ae0941/raw/789dfb569d3fa8eb65ff2f0a71ec540d4f262425/cities.csv",
+      "format": {"type": "csv", "parse": {"escap": "string"}, "delimiter": ","},
+      "transform": [
+        {"type": "filter", "expr": "datum[\"escap\"]===\"Bangkok\""},
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "city",
+          "fields": ["escap"],
+          "values": ["latitude", "longitude"],
+          "as": ["origin_latitude", "origin_longitude"]
+        },
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "city",
+          "fields": ["location"],
+          "values": ["latitude", "longitude"],
+          "as": ["dest_latitude", "dest_longitude"]
+        },
+        {
+          "type": "geopoint",
+          "projection": "projection",
+          "fields": ["origin_longitude", "origin_latitude"],
+          "as": ["layer_2_x", "layer_2_y"]
+        },
+        {
+          "type": "geopoint",
+          "projection": "projection",
+          "fields": ["dest_longitude", "dest_latitude"],
+          "as": ["layer_2_x2", "layer_2_y2"]
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "translate": {"signal": "[width / 2, height / 2]"},
+      "type": "azimuthalEqualArea",
+      "scale": 300,
+      "rotate": [-110, 0, 0],
+      "center": [-10, 20]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "shape",
+      "clip": true,
+      "style": ["geoshape"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "fill": {"value": "lightgrey"},
+          "stroke": {"value": "lightgrey"},
+          "ariaRoleDescription": {"value": "geoshape"}
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "symbol",
+      "clip": true,
+      "style": ["circle"],
+      "from": {"data": "source_1"},
+      "encode": {
+        "update": {
+          "fill": {"value": "darkorange"},
+          "fillOpacity": {"value": 0.8},
+          "x": {"field": "layer_1_x"},
+          "y": {"field": "layer_1_y"},
+          "size": {"value": 400},
+          "shape": {"value": "circle"},
+          "stroke": {"value": "white"},
+          "strokeWidth": {"value": 1},
+          "tooltip": {"field": "entity"}
+        },
+        "hover": {"fill": {"value": "red"}, "size": {"value": 600}}
+      }
+    },
+    {
+      "name": "layer_2_marks",
+      "type": "rule",
+      "clip": true,
+      "style": ["rule"],
+      "from": {"data": "source_2"},
+      "encode": {
+        "update": {
+          "stroke": {"value": "black"},
+          "strokeOpacity": {"value": 0.35},
+          "strokeWidth": {"value": 1},
+          "x": {"field": "layer_2_x"},
+          "x2": {"field": "layer_2_x2"},
+          "y": {"field": "layer_2_y"},
+          "y2": {"field": "layer_2_y2"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "source_1"},
+      "encode": {
+        "enter": {
+          "text": {"field": "city"},
+          "fontSize": {"value": 9},
+          "baseline": {"value": "middle"},
+          "opacity": {"value": 0.7}
+        },
+        "update": {
+          "x": {"field": "layer_1_x"},
+          "y": {"field": "layer_1_y"},
+          "dx": {"signal": "datum.children ? -15 : 15"},
+          "align": {"signal": "datum.children ? 'right' : 'left'"}
+        }
+      }
+    }
+  ],
+  "config": {}
+};
+    vegaEmbed("#vis", spec, {mode: "vega"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>

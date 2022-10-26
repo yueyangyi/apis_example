@@ -1,0 +1,39 @@
+[
+  {
+    "title": "Ministry of Industry and Information Technology of China",
+    "description": "Governmental Partner.",
+    "image": "images/features/china_miit.png",  
+    "link": "https://www.miit.gov.cn/"
+  },
+  {
+    "title": "Ministry of Information and Communications of Vietnam",
+    "description": "Governmental Partner.",
+    "image": "images/features/vietnam_mic.jpg", 
+    "link": "https://english.mic.gov.vn/Pages/home.aspx"
+  },
+  {
+    "title": "Ministry of Industry and Information Technology of China",
+    "description": "Governmental Partner.",
+    "image": "images/features/china_miit.png",  
+    "link": "https://www.miit.gov.cn/"
+  },
+  {
+    "title": "Ministry of Information and Communications of Vietnam",
+    "description": "Governmental Partner.",
+    "image": "images/features/vietnam_mic.jpg", 
+    "link": "https://english.mic.gov.vn/Pages/home.aspx"
+  },
+  {
+    "title": "Ministry of Industry and Information Technology of China",
+    "description": "Governmental Partner.",
+    "image": "images/features/china_miit.png",  
+    "link": "https://www.miit.gov.cn/"
+  },
+  {
+    "title": "Ministry of Information and Communications of Vietnam",
+    "description": "Governmental Partner.",
+    "image": "images/features/vietnam_mic.jpg", 
+    "link": "https://english.mic.gov.vn/Pages/home.aspx"
+  }
+  
+]
